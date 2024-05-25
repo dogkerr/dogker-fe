@@ -1,10 +1,4 @@
-import AuthButton from "../AuthButton.server";
-
 const Dashboard = () => {
-  return (
-    <div>
-      <AuthButton />
-    </div>
-  );
+  return <div>Dashboard</div>;
 };
 export default Dashboard;
