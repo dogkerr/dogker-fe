@@ -1,7 +1,7 @@
 import NextAuth, { User, NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-export const BASE_PATH = "/api/auth";
+const apiUrl = process.env.NEXT_PUBLIC_CLIENT_API_URL;
 
 const authOptions: NextAuthConfig = {
   providers: [
@@ -13,16 +13,70 @@ const authOptions: NextAuthConfig = {
       },
       async authorize(credentials): Promise<User | null> {
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "test@email.com" };
+        const { username, password } = credentials;
+        console.log("Authorize called");
+        console.log("Username", username);
+        console.log("Password", password);
 
-        return user;
+        try {
+          // const res = await fetch(`${apiUrl}/authentications`, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({ username, password }),
+          // });
+          // if (!res.ok) {
+          //   throw new Error("Authentication Failed");
+          // }
+
+          // const user = await res.json();
+          // if (!user) {
+          //   throw new Error("Failed to parse JSON response");
+          // }
+
+          const user = {
+            id: "1",
+            name: "John Smith",
+            email: "test@test.com",
+          };
+
+          return user;
+        } catch (error) {
+          console.log(error);
+          throw new Error("Error during authentication");
+        }
       },
     }),
   ],
+  callbacks: {
+    // TODO: Implement JWT and Session callbacks
+    async jwt({ token, user }) {
+      console.log("JWT called");
+      console.log("User", user);
+      console.log("Token", token);
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("Session called");
+      console.log("Session", session);
+      console.log("Token", token);
+      session.user.id = token.id as string;
+      session.user.name = token.name as string;
+      session.user.email = token.email as string;
+      return session;
+    },
+  },
   pages: {
     signIn: "/login",
+    error: "/login",
   },
-  basePath: BASE_PATH,
+  session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
 };

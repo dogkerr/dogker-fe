@@ -5,6 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Register = () => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Register");
+  };
+
   return (
     <div className="w-full h-screen flex space-y-8 flex-col items-center justify-center">
       <Image
@@ -15,7 +20,10 @@ const Register = () => {
         height={300}
       />
       <p className="max-w-[30ch] text-center">Register an account</p>
-      <div className="flex-col space-y-4 flex w-80">
+      <form
+        onSubmit={(e) => handleRegister(e)}
+        className="flex-col space-y-4 flex w-80"
+      >
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="email">Email</Label>
           <Input type="email" id="email" placeholder="Email" />
@@ -40,8 +48,10 @@ const Register = () => {
             </Button>
           </Link>
         </p>
-        <Button className="w-full">Register</Button>
-      </div>
+        <Button type="submit" className="w-full">
+          Register
+        </Button>
+      </form>
     </div>
   );
 };
