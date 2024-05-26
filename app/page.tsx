@@ -20,7 +20,7 @@ export default function Home() {
         <Link href="/login">
           <Button className="w-full">Login</Button>
         </Link>
-        <Link href="/login">
+        <Link href="/register">
           <Button className="w-full" variant={"secondary"}>
             Register
           </Button>

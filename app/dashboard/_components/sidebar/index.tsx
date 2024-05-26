@@ -8,7 +8,7 @@ const sidebarItems = [
   {
     Icon: Home,
     label: "Overview",
-    href: "/dashboard",
+    href: "/dashboard/overview",
   },
   {
     Icon: Box,

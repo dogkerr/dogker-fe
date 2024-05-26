@@ -16,7 +16,7 @@ type ItemProps = {
 
 const Item = ({ Icon, label, href }: ItemProps) => {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = pathname.includes(href);
 
   return (
     <Link className="flex group items-center space-x-4 text-sm" href={href}>
