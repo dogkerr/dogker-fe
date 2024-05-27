@@ -26,8 +26,6 @@ const Login = () => {
       redirect: false,
     });
 
-    console.log(res);
-
     if (res?.error && res.error !== "undefined") {
       setError("Invalid credentials");
       return;

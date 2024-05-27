@@ -27,7 +27,12 @@ import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 type NavbarProps = {
-  user: User | undefined;
+  user: {
+    id: string;
+    fullname: string;
+    username: string;
+    email: string;
+  } & User;
 };
 
 const Navbar = ({ user }: NavbarProps) => {
@@ -53,7 +58,7 @@ const Navbar = ({ user }: NavbarProps) => {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="text-xs font-medium">{user?.name}</span>
+              <span className="text-xs font-medium">{user.fullname}</span>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
