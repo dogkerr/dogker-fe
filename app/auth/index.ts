@@ -2,6 +2,7 @@ import NextAuth, { User, NextAuthConfig, DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signIn as signInNextAuth } from "next-auth/react";
 import { jwtDecode } from "jwt-decode";
+import { JWT } from "next-auth/jwt";
 
 const apiUrl = process.env.NEXT_PUBLIC_AUTH_API_URL;
 
@@ -43,6 +44,19 @@ declare module "next-auth" {
   }
 }
 
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    accessToken: string;
+    refreshToken: string;
+    id: string;
+    fullname: string;
+    username: string;
+    email: string;
+  }
+}
+
 const authOptions: NextAuthConfig = {
   providers: [
     Credentials({
@@ -81,7 +95,7 @@ const authOptions: NextAuthConfig = {
 
           const userId = decoded.sub;
 
-          const userDetailRes = await fetch(`${apiUrl}/users?id=${userId}`);
+          const userDetailRes = await fetch(`${apiUrl}/users/${userId}`);
           if (!userDetailRes.ok) {
             throw new Error("Failed to fetch user details");
           }
@@ -119,6 +133,31 @@ const authOptions: NextAuthConfig = {
         token.email = user.user.email;
       }
 
+      // Refresh token rotation
+      const accessToken = token.accessToken;
+      const decoded = jwtDecode(accessToken);
+      const currentTime = Date.now() / 1000;
+      const timeToExpiration = (decoded.exp as number) - currentTime;
+
+      // Jika token akan expire dalam waktu kurang dari 1 hari, refresh token
+      if (timeToExpiration < 24 * 60 * 60 * 1000) {
+        const res = await fetch(`${apiUrl}/authentications`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+          body: JSON.stringify({ refreshToken: token.refreshToken }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data) {
+          token.accessToken = data.data.accessToken;
+        } else {
+          throw new Error("JWT Callback error: Failed to refresh token");
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -133,6 +172,28 @@ const authOptions: NextAuthConfig = {
       session.user.username = token.username as string;
       session.user.email = token.email as string;
       return session;
+    },
+  },
+  events: {
+    async signOut(message) {
+      if ("token" in message) {
+        const res = await fetch(`${apiUrl}/authentications`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${message?.token?.accessToken}`,
+          },
+          body: JSON.stringify({
+            refreshToken: message?.token?.refreshToken,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error("Failed to sign out");
+        }
+      }
     },
   },
   pages: {
