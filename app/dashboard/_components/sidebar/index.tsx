@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, CreditCard, Home, Settings } from "lucide-react";
+import { Box, CreditCard, FileClock, Home, Settings } from "lucide-react";
 import Item from "./item";
 import { useSidebar } from "@/store/use-sidebar";
 
@@ -11,6 +11,11 @@ const sidebarItems = [
     href: "/dashboard/overview",
   },
   {
+    Icon: FileClock,
+    label: "Logs",
+    href: "/dashboard/logs",
+  },
+  {
     Icon: Box,
     label: "Container",
     href: "/dashboard/containers",
@@ -19,11 +24,6 @@ const sidebarItems = [
     Icon: CreditCard,
     label: "Billing",
     href: "/dashboard/billing",
-  },
-  {
-    Icon: Settings,
-    label: "Settings",
-    href: "/dashboard/settings",
   },
 ];
 

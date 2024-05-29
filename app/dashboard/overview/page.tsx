@@ -1,6 +1,12 @@
+import { auth } from "@/app/auth";
 import { Home } from "lucide-react";
 
-const Dashboard = () => {
+const Dashboard = async () => {
+  const session = await auth();
+  if (!session) {
+    return <div>Unauthorized</div>;
+  }
+
   return (
     <div>
       <div className="flex items-center space-x-4">
