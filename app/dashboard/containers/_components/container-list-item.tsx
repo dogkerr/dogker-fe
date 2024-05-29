@@ -1,20 +1,26 @@
 import Link from "next/link";
 
 type ContainerListItemProps = {
-  containerId: string;
+  container: Container;
 };
 
-const ContainerListItem = ({ containerId }: ContainerListItemProps) => {
+const ContainerListItem = ({ container }: ContainerListItemProps) => {
   return (
-    <Link className="block" href={`/dashboard/containers/${containerId}`}>
+    <Link
+      className="block"
+      href={`/dashboard/containers/${container.service_id}`}
+    >
       <div className="bg-secondary hover:bg-secondary/80 flex space-x-4 p-4 rounded-sm shadow-sm">
         <div className="border-dashed bg-blue-500/30 border-blue-700 border w-20 h-20"></div>
         <div className="flex-grow space-y-1">
-          <p className="font-medium">acme-billing-service</p>
+          <p className="font-medium">{container.name}</p>
           <p className="text-sm text-gray-500">
             <span>
-              Last pull: 30/03/24 (12:00) | 1 CPU-Core | 2GB |
-              https://example.hub.com
+              Created time: {new Date(container.created_at).toLocaleString()} |{" "}
+              Terminated time:{" "}
+              {new Date(container.terminated_time).toLocaleString()} |{" "}
+              {container.limit.cpus / 1000} CPU-Core |{" "}
+              {container.limit.memory / 1000}GB
             </span>
           </p>
           <button

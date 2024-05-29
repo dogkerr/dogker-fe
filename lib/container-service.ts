@@ -38,7 +38,7 @@ export const getContainers = async (accessToken: string) => {
       throw new Error("Failed to fetch containers");
     }
 
-    return data;
+    return data as ContainersResponse;
   } catch (error) {
     return { error: (error as any).message, ok: false };
   }
@@ -57,7 +57,7 @@ export const getContainer = async (serviceId: string, accessToken: string) => {
       throw new Error("Failed to fetch container with id: " + serviceId);
     }
 
-    return data;
+    return data as { container: Container };
   } catch (error) {
     return { error: (error as any).message, ok: false };
   }

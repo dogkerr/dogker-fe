@@ -35,10 +35,10 @@ type CreateContainerRequest = {
 };
 
 type ScheduleCreateContainerRequest = {
-  action: "CREATE";
+  action: string;
   scheduled_time: number;
   time_format: ContainerScheduleTimeFormat;
-  body: CreateContainerRequest;
+  container: CreateContainerRequest;
 };
 
 type ContainersResponse = {
