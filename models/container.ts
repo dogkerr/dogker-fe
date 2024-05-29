@@ -22,16 +22,9 @@ type ScheduleContainerActionRequest = {
 type CreateContainerRequest = {
   name: string;
   image: string;
-  limit: {
-    cpus: number;
-    memory: number;
-  };
+  limit: Limit;
   replica: number;
-  endpoint: {
-    target_port: number;
-    published_port: number;
-    protocol: string;
-  };
+  endpoint: Endpoint[];
 };
 
 type ScheduleCreateContainerRequest = {

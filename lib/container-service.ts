@@ -155,6 +155,29 @@ export const deleteContainer = async (
   }
 };
 
+export const terminateContainer = async (
+  serviceId: string,
+  accessToken: string
+) => {
+  try {
+    const res = await fetch(`${apiUrl}/api/v1/containers/${serviceId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error("Failed to terminate container with id: " + serviceId);
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as any).message, ok: false };
+  }
+};
+
 export const updateContainer = async (
   serviceId: string,
   accessToken: string,

@@ -1,6 +1,8 @@
 import { auth } from "@/app/auth";
+import { Button } from "@/components/ui/button";
 import { getContainer } from "@/lib/container-service";
 import { Box } from "lucide-react";
+import ActionButton from "./_components/action-button";
 
 const ContainerDetail = async ({ params }: { params: { id: string } }) => {
   const session = await auth();
@@ -15,11 +17,16 @@ const ContainerDetail = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div>
-      <div className="flex items-center space-x-4">
-        <Box className="w-10 h-10 stroke-primary" />
-        <div>
-          <p className="font-bold text-xl">{data.container.name}</p>
-          <p className="text-xs">{data.container.service_id}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Box className="w-10 h-10 stroke-primary" />
+          <div>
+            <p className="font-bold text-xl">{data.container.name}</p>
+            <p className="text-xs">{data.container.service_id}</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          <ActionButton container={data.container} session={session} />
         </div>
       </div>
       <div className="mt-8 space-y-4">
