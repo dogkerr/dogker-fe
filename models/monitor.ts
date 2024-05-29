@@ -16,3 +16,8 @@ type MonitoringLinks = {
   overall_cpu_usage: string;
   total_container: string;
 };
+
+type LogsLink = {
+  dashboard: DashboardMetadata;
+  logs_dashboard_link: string;
+};
