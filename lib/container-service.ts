@@ -106,31 +106,31 @@ export const stopContainer = async (serviceId: string, accessToken: string) => {
   }
 };
 
-export const scaleContainer = async (
-  serviceId: string,
-  replica: number,
-  accessToken: string
-) => {
-  try {
-    const res = await fetch(`${apiUrl}/api/v1/containers/${serviceId}/scale`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ replica }),
-    });
-    const data = await res.json();
+// export const scaleContainer = async (
+//   serviceId: string,
+//   replica: number,
+//   accessToken: string
+// ) => {
+//   try {
+//     const res = await fetch(`${apiUrl}/api/v1/containers/${serviceId}/scale`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       body: JSON.stringify({ replica }),
+//     });
+//     const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error("Failed to scale container with id: " + serviceId);
-    }
+//     if (!res.ok) {
+//       throw new Error("Failed to scale container with id: " + serviceId);
+//     }
 
-    return data;
-  } catch (error) {
-    return { error: (error as any).message, ok: false };
-  }
-};
+//     return data;
+//   } catch (error) {
+//     return { error: (error as any).message, ok: false };
+//   }
+// };
 
 export const deleteContainer = async (
   serviceId: string,

@@ -2,7 +2,7 @@ import { auth } from "@/app/auth";
 import { Button } from "@/components/ui/button";
 import { getContainer } from "@/lib/container-service";
 import { Box } from "lucide-react";
-import ActionButton from "./_components/action-button";
+import ActionButtons from "./_components/action-buttons";
 
 const ContainerDetail = async ({ params }: { params: { id: string } }) => {
   const session = await auth();
@@ -26,7 +26,7 @@ const ContainerDetail = async ({ params }: { params: { id: string } }) => {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <ActionButton container={data.container} session={session} />
+          <ActionButtons container={data.container} session={session} />
         </div>
       </div>
       <div className="mt-8 space-y-4">

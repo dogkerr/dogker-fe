@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Form } from "@/components/ui/form";
 import {
+  scheduleContainerAction,
   startContainer,
   stopContainer,
   terminateContainer,
@@ -35,7 +36,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const ActionButton = ({
+const ActionButtons = ({
   session,
   container,
 }: {
@@ -73,7 +74,7 @@ const ActionButton = ({
       toast.error(data.error);
       return;
     } else {
-      toast.success("Container created successfully");
+      toast.success("Container modified successfully");
     }
   }
 
@@ -113,8 +114,23 @@ const ActionButton = ({
     }
   };
 
+  // const handleSchedule = async (action: string) => {
+  //   const data = await scheduleContainerAction(
+  //     container.service_id,
+  //     session.accessToken,
+  //     action
+  //   );
+  //   if ("error" in data) {
+  //     toast.error(data.error);
+  //     return;
+  //   } else {
+  //     toast.success("Container scheduled successfully");
+  //   }
+  // };
+
   return (
     <>
+      {/* More Actions button */}
       <Dialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -133,7 +149,98 @@ const ActionButton = ({
             <DialogTrigger className="w-full">
               <DropdownMenuItem>Modify</DropdownMenuItem>
             </DialogTrigger>
-            <DropdownMenuItem>Schedule</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DialogContent className="max-h-[80vh] overflow-y-scroll">
+          <DialogHeader>
+            <DialogTitle>Modify </DialogTitle>
+            <DialogDescription>
+              Please fill in the form below to create a new container.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...addForm}>
+            <form
+              onSubmit={addForm.handleSubmit(onAddSubmit)}
+              className="space-y-4"
+            >
+              <FormInput
+                label="Container Name"
+                name="name"
+                placeholder="Enter container name"
+              />
+              <FormInput
+                label="Image"
+                name="image"
+                placeholder="Enter image name"
+              />
+              <FormInput
+                label="CPUs (miliCPU)"
+                name="limit.cpus"
+                placeholder="Enter number of miliCPUs"
+                type="number"
+              />
+              <FormInput
+                label="Memory (MB)"
+                name="limit.memory"
+                placeholder="Enter memory in MB"
+                type="number"
+              />
+              <FormInput
+                label="Replicas"
+                name="replica"
+                placeholder="Enter number of replicas"
+                type="number"
+              />
+              <FormInput
+                label="Target Port"
+                name="endpoint[0].target_port"
+                placeholder="Enter target port"
+                type="number"
+              />
+              <FormInput
+                label="Published Port"
+                name="endpoint[0].published_port"
+                placeholder="Enter published port"
+                type="number"
+              />
+              <FormSelect
+                label="Protocol"
+                name="endpoint[0].protocol"
+                options={[
+                  { value: "tcp", label: "TCP" },
+                  { value: "udp", label: "UDP" },
+                ]}
+              />
+              <Button type="submit">Modify</Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Schedule button */}
+      <Dialog>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              className="flex items-center space-x-2"
+              variant={"secondary"}
+              size={"xs"}
+            >
+              <span>Schedule</span> <ChevronDown className="w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Schedule actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem onClick={handleScheduleStop}>
+              Stop
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleScheduleStart}>
+              Start
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleScheduleTerminate}>
+              Terminate
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
         <DialogContent className="max-h-[80vh] overflow-y-scroll">
@@ -204,4 +311,4 @@ const ActionButton = ({
     </>
   );
 };
-export default ActionButton;
+export default ActionButtons;
