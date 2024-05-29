@@ -113,25 +113,25 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
               />
               <FormInput
                 label="Target Port"
-                name="endpoint.target_port"
+                name="endpoint[0].target_port"
                 placeholder="Enter target port"
                 type="number"
               />
               <FormInput
                 label="Published Port"
-                name="endpoint.published_port"
+                name="endpoint[0].published_port"
                 placeholder="Enter published port"
                 type="number"
               />
               <FormSelect
                 label="Protocol"
-                name="endpoint.protocol"
+                name="endpoint[0].protocol"
                 options={[
                   { value: "tcp", label: "TCP" },
                   { value: "udp", label: "UDP" },
                 ]}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Create container</Button>
             </form>
           </Form>
         </DialogContent>
@@ -204,25 +204,25 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
               />
               <FormInput
                 label="Target Port"
-                name="container.endpoint.target_port"
+                name="container.endpoint[0].target_port"
                 placeholder="Enter target port"
                 type="number"
               />
               <FormInput
                 label="Published Port"
-                name="container.endpoint.published_port"
+                name="container.endpoint[0].published_port"
                 placeholder="Enter published port"
                 type="number"
               />
               <FormSelect
                 label="Protocol"
-                name="container.endpoint.protocol"
+                name="container.endpoint[0].protocol"
                 options={[
                   { value: "tcp", label: "TCP" },
                   { value: "udp", label: "UDP" },
                 ]}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Schedule</Button>
             </form>
           </Form>
         </DialogContent>

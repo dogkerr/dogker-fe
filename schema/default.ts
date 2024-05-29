@@ -6,11 +6,13 @@ export const addContainerDefault = {
     memory: undefined,
   },
   replica: 1,
-  endpoint: {
-    target_port: undefined,
-    published_port: undefined,
-    protocol: undefined, // Assuming "tcp" as a common default protocol
-  },
+  endpoint: [
+    {
+      target_port: undefined,
+      published_port: undefined,
+      protocol: undefined, // Assuming "tcp" as a common default protocol
+    },
+  ],
 };
 
 export const scheduleContainerRequestDefault = {
@@ -25,10 +27,12 @@ export const scheduleContainerRequestDefault = {
       memory: 0,
     },
     replica: 1,
-    endpoint: {
-      target_port: 0,
-      published_port: 0,
-      protocol: "tcp",
-    },
+    endpoint: [
+      {
+        target_port: 0,
+        published_port: 0,
+        protocol: "tcp",
+      },
+    ],
   },
 };
