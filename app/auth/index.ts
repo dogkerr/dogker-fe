@@ -139,6 +139,7 @@ const authOptions: NextAuthConfig = {
       const currentTime = Date.now() / 1000;
       const timeToExpiration = (decoded.exp as number) - currentTime;
 
+      // TODO: Implement helper function to refresh token if API response is TokenExpirationError
       // Jika token akan expire dalam waktu kurang dari 1 hari, refresh token
       if (timeToExpiration < 24 * 60 * 60 * 1000) {
         const res = await fetch(`${apiUrl}/authentications`, {

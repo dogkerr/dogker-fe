@@ -101,12 +101,14 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <p className="text-sm !mt-0">
+        <p className="text-sm !mt-2">
           Already have an account?{" "}
-          <Link href={"/login"}>
-            <Button className="px-0" variant={"link"}>
-              Login
-            </Button>
+          <Link
+            className="hover:underline text-primary"
+            tabIndex={-1}
+            href={"/login"}
+          >
+            Login
           </Link>
         </p>
         <Button type="submit" className="w-full">

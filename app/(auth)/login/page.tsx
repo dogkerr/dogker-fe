@@ -80,12 +80,14 @@ const Login = () => {
             placeholder="Password"
           />
         </div>
-        <p className="text-sm !mt-0">
+        <p className="text-sm !mt-2">
           Don&apos;t have an account?{" "}
-          <Link href={"/register"}>
-            <Button className="px-0" variant={"link"}>
-              Register
-            </Button>
+          <Link
+            className="hover:underline text-primary"
+            tabIndex={-1}
+            href={"/register"}
+          >
+            Register
           </Link>
         </p>
         <Button type="submit" className="w-full">
