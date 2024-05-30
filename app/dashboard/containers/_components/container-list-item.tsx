@@ -25,7 +25,7 @@ const ContainerListItem = ({ container }: ContainerListItemProps) => {
       href={`/dashboard/containers/${container.service_id}`}
     >
       <div className="bg-secondary hover:bg-secondary/80 flex space-x-4 p-4 rounded-sm shadow-sm">
-        <div className="border-dashed bg-blue-500/30 border-blue-700 border w-20 h-20"></div>
+        <div className="border-dashed bg-blue-500/30 border-blue-700 rounded-sm border w-20 h-20"></div>
         <div className="flex-grow space-y-1">
           <p className="font-medium">{container.name}</p>
           <p className="text-sm text-gray-500">
@@ -39,7 +39,10 @@ const ContainerListItem = ({ container }: ContainerListItemProps) => {
           </p>
           <button
             type="button"
-            className={cn("px-1 py-0.5 border text-sm", labelColorStyle)}
+            className={cn(
+              "px-1 py-0.5 border rounded-sm text-sm",
+              labelColorStyle
+            )}
           >
             <span className={cn(labelTextStyle)}>{container.status}</span>
           </button>

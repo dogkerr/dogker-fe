@@ -33,6 +33,7 @@ import { addContainerDefault } from "@/schema/default";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,6 +47,8 @@ const ActionButtons = ({
   container: Container;
 }) => {
   const [loading, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const addContainerDefaultValue = {
     ...addContainerDefault,
@@ -132,6 +135,7 @@ const ActionButtons = ({
       await revalidatePathServer(
         "/dashboard/containers/" + container.service_id
       );
+      router.replace("/dashboard/containers");
     }
   };
 
