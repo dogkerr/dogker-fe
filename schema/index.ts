@@ -30,3 +30,11 @@ export const scheduleContainerRequestSchema = z.object({
   time_format: z.enum(["SECOND", "MINUTE", "HOUR", "DAY"]),
   container: addContainerSchema,
 });
+
+export const scheduleSmallContainerRequestSchema = z.object({
+  action: z.enum(["START", "STOP", "TERMINATE"]),
+  scheduled_time: z.coerce
+    .number()
+    .min(0, "Scheduled time must be a non-negative number"),
+  time_format: z.enum(["SECOND", "MINUTE", "HOUR", "DAY"]),
+});

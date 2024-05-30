@@ -36,3 +36,9 @@ export const scheduleContainerRequestDefault = {
     ],
   },
 };
+
+export const scheduleSmallContainerRequestDefault = {
+  action: "" as "START",
+  scheduled_time: 0,
+  time_format: "" as "SECOND",
+};
