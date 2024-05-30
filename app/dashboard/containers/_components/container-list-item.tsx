@@ -1,10 +1,24 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 type ContainerListItemProps = {
   container: Container;
 };
 
+// TODO: Tambahkan container yang dischedule ke list container
 const ContainerListItem = ({ container }: ContainerListItemProps) => {
+  const labelTextStyle = {
+    "text-green-700": container.status === "RUN",
+    "text-red-700": container.status === "TERMINATED",
+    "text-orange-700": container.status === "STOP",
+  };
+
+  const labelColorStyle = {
+    "border-green-700 bg-green-500/30": container.status === "RUN",
+    "border-red-700 bg-red-500/30": container.status === "TERMINATED",
+    "border-orange-700 bg-orange-500/30": container.status === "STOP",
+  };
+
   return (
     <Link
       className="block"
@@ -25,9 +39,9 @@ const ContainerListItem = ({ container }: ContainerListItemProps) => {
           </p>
           <button
             type="button"
-            className="px-1 py-0.5 bg-green-500/30 border text-sm border-green-700"
+            className={cn("px-1 py-0.5 border text-sm", labelColorStyle)}
           >
-            <span className="text-green-700">Running</span>
+            <span className={cn(labelTextStyle)}>{container.status}</span>
           </button>
         </div>
       </div>

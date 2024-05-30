@@ -26,25 +26,34 @@ import {
 } from "@/lib/container-service";
 import { Session } from "next-auth";
 import { toast } from "sonner";
+import { useTransition } from "react";
+import { revalidatePathServer } from "@/lib/action-utils";
 
 type ActionButtonsProps = {
   session: Session;
 };
 
 const ActionButtons = ({ session }: ActionButtonsProps) => {
+  const [addLoading, startAddTransition] = useTransition();
+  const [scheduleLoading, startScheduleTransition] = useTransition();
+
   const addForm = useForm<z.infer<typeof addContainerSchema>>({
     resolver: zodResolver(addContainerSchema),
     defaultValues: addContainerDefault,
   });
 
   async function onAddSubmit(values: z.infer<typeof addContainerSchema>) {
-    const data = await createContainer(values, session.accessToken);
-    if ("error" in data) {
-      toast.error(data.error);
-      return;
-    } else {
-      toast.success("Container created successfully");
-    }
+    startAddTransition(async () => {
+      const data = await createContainer(values, session.accessToken);
+      if ("error" in data) {
+        toast.error(data.error);
+        return;
+      } else {
+        toast.success("Container created successfully");
+        await revalidatePathServer("/dashboard/containers");
+        addForm.reset(addContainerDefault);
+      }
+    });
   }
 
   const scheduleForm = useForm<z.infer<typeof scheduleContainerRequestSchema>>({
@@ -55,13 +64,19 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
   async function onScheduleSubmit(
     values: z.infer<typeof scheduleContainerRequestSchema>
   ) {
-    const data = await scheduleCreateContainer(session.accessToken, values);
-    if ("error" in data) {
-      toast.error(data.error);
-      return;
-    } else {
-      toast.success("Container created successfully");
-    }
+    startScheduleTransition(async () => {
+      const data = await scheduleCreateContainer(session.accessToken, values);
+      if ("error" in data) {
+        toast.error(data.error);
+        return;
+      } else {
+        toast.success(
+          `Container scheduled for creation ${values.scheduled_time} ${values.time_format} from now`
+        );
+        await revalidatePathServer("/dashboard/containers");
+        scheduleForm.reset(scheduleContainerRequestDefault);
+      }
+    });
   }
 
   return (
@@ -131,7 +146,9 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
                   { value: "udp", label: "UDP" },
                 ]}
               />
-              <Button type="submit">Create container</Button>
+              <Button disabled={addLoading} type="submit">
+                {addLoading ? "Creating container" : "Create container"}
+              </Button>
             </form>
           </Form>
         </DialogContent>
@@ -222,7 +239,9 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
                   { value: "udp", label: "UDP" },
                 ]}
               />
-              <Button type="submit">Schedule</Button>
+              <Button disabled={scheduleLoading} type="submit">
+                {scheduleLoading ? "Scheduling container" : "Schedule"}
+              </Button>
             </form>
           </Form>
         </DialogContent>

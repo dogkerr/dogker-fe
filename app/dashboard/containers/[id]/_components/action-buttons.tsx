@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Form } from "@/components/ui/form";
+import { revalidatePathServer } from "@/lib/action-utils";
 import {
   scheduleContainerAction,
   startContainer,
@@ -32,6 +33,7 @@ import { addContainerDefault } from "@/schema/default";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { Session } from "next-auth";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -43,39 +45,49 @@ const ActionButtons = ({
   session: Session;
   container: Container;
 }) => {
+  const [loading, startTransition] = useTransition();
+
+  const addContainerDefaultValue = {
+    ...addContainerDefault,
+    name: container.name,
+    image: container.image,
+    limit: {
+      cpus: container.limit.cpus,
+      memory: container.limit.memory,
+    },
+    replica: container.replica,
+    endpoint: [
+      {
+        target_port: container.endpoint[0].target_port,
+        published_port: container.endpoint[0].published_port,
+        protocol: container.endpoint[0].protocol as any,
+      },
+    ],
+  };
+
   const addForm = useForm<z.infer<typeof addContainerSchema>>({
     resolver: zodResolver(addContainerSchema),
-    defaultValues: {
-      ...addContainerDefault,
-      name: container.name,
-      image: container.image,
-      limit: {
-        cpus: container.limit.cpus,
-        memory: container.limit.memory,
-      },
-      replica: container.replica,
-      endpoint: [
-        {
-          target_port: container.endpoint[0].target_port,
-          published_port: container.endpoint[0].published_port,
-          protocol: container.endpoint[0].protocol as any,
-        },
-      ],
-    },
+    defaultValues: addContainerDefaultValue,
   });
 
   async function onAddSubmit(values: z.infer<typeof addContainerSchema>) {
-    const data = await updateContainer(
-      container.service_id,
-      session.accessToken,
-      values
-    );
-    if ("error" in data) {
-      toast.error(data.error);
-      return;
-    } else {
-      toast.success("Container modified successfully");
-    }
+    startTransition(async () => {
+      const data = await updateContainer(
+        container.service_id,
+        session.accessToken,
+        values
+      );
+      if ("error" in data) {
+        toast.error(data.error);
+        return;
+      } else {
+        toast.success("Container modified successfully");
+        await revalidatePathServer(
+          "/dashboard/containers/" + container.service_id
+        );
+        addForm.reset(addContainerDefaultValue);
+      }
+    });
   }
 
   const handleStop = async () => {
@@ -85,6 +97,9 @@ const ActionButtons = ({
       return;
     } else {
       toast.success("Container stopped successfully");
+      await revalidatePathServer(
+        "/dashboard/containers/" + container.service_id
+      );
     }
   };
 
@@ -98,6 +113,9 @@ const ActionButtons = ({
       return;
     } else {
       toast.success("Container started successfully");
+      await revalidatePathServer(
+        "/dashboard/containers/" + container.service_id
+      );
     }
   };
 
@@ -111,6 +129,9 @@ const ActionButtons = ({
       return;
     } else {
       toast.success("Container terminated successfully");
+      await revalidatePathServer(
+        "/dashboard/containers/" + container.service_id
+      );
     }
   };
 
@@ -153,7 +174,7 @@ const ActionButtons = ({
         </DropdownMenu>
         <DialogContent className="max-h-[80vh] overflow-y-scroll">
           <DialogHeader>
-            <DialogTitle>Modify </DialogTitle>
+            <DialogTitle>Modify {container.name}</DialogTitle>
             <DialogDescription>
               Please fill in the form below to create a new container.
             </DialogDescription>
@@ -211,12 +232,15 @@ const ActionButtons = ({
                   { value: "udp", label: "UDP" },
                 ]}
               />
-              <Button type="submit">Modify</Button>
+              <Button disabled={loading} type="submit">
+                {loading ? "Loading" : "Modify"}
+              </Button>
             </form>
           </Form>
         </DialogContent>
       </Dialog>
 
+      {/* TODO: Form untuk setiap schedule action masih belum dibuat */}
       {/* Schedule button */}
       <Dialog>
         <DropdownMenu>

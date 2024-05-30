@@ -26,16 +26,17 @@ const ContainerList = async () => {
         <div className="flex items-center space-x-4">
           <div className="text-xs">
             <p className="text-black/80">Count</p>
-            <p>{data.containers.length} containers</p>
+            <p>{data.containers ? data.containers.length : "No"} containers</p>
           </div>
           <div className="border-r border-black/30 h-12"></div>
           <ActionButtons session={session} />
         </div>
       </div>
       <div className="mt-8 space-y-4">
-        {data.containers.map((container, index) => (
-          <ContainerListItem key={index} container={container} />
-        ))}
+        {data.containers &&
+          data.containers.map((container, index) => (
+            <ContainerListItem key={index} container={container} />
+          ))}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -17,25 +17,29 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const [loading, startTransition] = useTransition();
+
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await signUp({ email, fullname, username, password });
-    if (res?.error && res.error !== "undefined") {
-      if (res.error !== "Configuration") {
-        setError(res.error);
-      } else {
-        setError(
-          "An error occurred while registering. Please try again later."
-        );
+    startTransition(async () => {
+      const res = await signUp({ email, fullname, username, password });
+      if (res?.error && res.error !== "undefined") {
+        if (res.error !== "Configuration") {
+          setError(res.error);
+        } else {
+          setError(
+            "An error occurred while registering. Please try again later."
+          );
+        }
+        return;
       }
-      return;
-    }
 
-    setError("");
-    router.replace("/dashboard/overview");
+      setError("");
+      router.replace("/dashboard/overview");
+    });
   };
 
   return (
@@ -57,7 +61,7 @@ const Register = () => {
             <span>{error}</span>{" "}
             <X
               onClick={() => setError("")}
-              className="cursor-pointer w-5 stroke-red-700"
+              className="flex-shrink-0 cursor-pointer w-5 stroke-red-700"
             />
           </div>
         )}
@@ -111,8 +115,8 @@ const Register = () => {
             Login
           </Link>
         </p>
-        <Button type="submit" className="w-full">
-          Register
+        <Button disabled={loading} type="submit" className="w-full">
+          {loading ? "Loading" : "Register"}
         </Button>
       </form>
     </div>

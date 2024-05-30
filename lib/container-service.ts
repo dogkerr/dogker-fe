@@ -16,7 +16,7 @@ export const createContainer = async (
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error("Failed to create container");
+      throw new Error("Failed to create container: " + data.message);
     }
 
     return data;
@@ -240,7 +240,7 @@ export const scheduleCreateContainer = async (
   body: ScheduleCreateContainerRequest
 ) => {
   try {
-    const res = await fetch(`${apiUrl}/api/v1/containers/schedule`, {
+    const res = await fetch(`${apiUrl}/api/v1/containers/create/schedule`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -251,7 +251,7 @@ export const scheduleCreateContainer = async (
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error("Failed to schedule create container");
+      throw new Error("Failed to schedule create container: " + data.message);
     }
 
     return data;

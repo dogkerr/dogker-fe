@@ -17,7 +17,7 @@ const Logs = async () => {
   const newLogsData = modifyLinks(
     logsData,
     "http://localhost",
-    "http://10.70.70.1"
+    "http://103.175.219.0"
   ) as unknown as LogsLink;
 
   return (

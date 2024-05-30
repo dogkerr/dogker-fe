@@ -17,7 +17,7 @@ const Dashboard = async () => {
   const newMonitorData = modifyLinks(
     monitorData,
     "http://127.0.0.1",
-    "http://10.70.70.1"
+    "http://103.175.219.0"
   ) as unknown as MonitoringLinks;
 
   return (

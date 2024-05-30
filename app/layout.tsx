@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import ProgressBarProvider from "@/components/progress-bar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`min-h-screen ${inter.className}`}>
-        {children}
+        <ProgressBarProvider>{children}</ProgressBarProvider>
         <Toaster richColors position="bottom-center" />
       </body>
     </html>

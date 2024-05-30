@@ -8,31 +8,35 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const [loading, startTransition] = useTransition();
+
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
+    startTransition(async () => {
+      const res = await signIn("credentials", {
+        username,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error && res.error !== "undefined") {
+        setError("Invalid credentials");
+        return;
+      }
+
+      setError("");
+      router.replace("/dashboard/overview");
     });
-
-    if (res?.error && res.error !== "undefined") {
-      setError("Invalid credentials");
-      return;
-    }
-
-    setError("");
-    router.replace("/dashboard/overview");
   };
 
   return (
@@ -56,7 +60,7 @@ const Login = () => {
             <span>{error}</span>{" "}
             <X
               onClick={() => setError("")}
-              className="cursor-pointer w-5 stroke-red-700"
+              className="flex-shrink-0 cursor-pointer w-5 stroke-red-700"
             />
           </div>
         )}
@@ -90,8 +94,8 @@ const Login = () => {
             Register
           </Link>
         </p>
-        <Button type="submit" className="w-full">
-          Login
+        <Button disabled={loading} type="submit" className="w-full">
+          {loading ? "Loading" : "Login"}
         </Button>
       </form>
     </div>

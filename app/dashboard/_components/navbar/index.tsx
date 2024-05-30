@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Toggle from "./toggle";
-import { useSelectedLayoutSegments } from "next/navigation";
+import { usePathname, useSelectedLayoutSegments } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useTransition } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -23,8 +23,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User } from "next-auth";
-import { LogOut } from "lucide-react";
+import { LogOut, RefreshCcw } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { revalidatePathServer } from "@/lib/action-utils";
+import { cn } from "@/lib/utils";
 
 type NavbarProps = {
   user: {
@@ -37,6 +39,15 @@ type NavbarProps = {
 
 const Navbar = ({ user }: NavbarProps) => {
   const segments = useSelectedLayoutSegments();
+  const pathname = usePathname();
+
+  const [loading, startTransition] = useTransition();
+
+  const handleRefreshPath = () => {
+    startTransition(async () => {
+      await revalidatePathServer(pathname);
+    });
+  };
 
   return (
     <nav className="fixed bg-white top-0 w-full h-20 z-[49] border-b border-[#24292E]/30 shadow-sm">
@@ -71,32 +82,41 @@ const Navbar = ({ user }: NavbarProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="w-full space-x-4 py-2 flex items-center px-4 h-9">
-        <Toggle />
-        <Breadcrumb>
-          <BreadcrumbList>
-            {segments.map((segment, index, segments) => (
-              <Fragment key={index}>
-                <BreadcrumbItem key={index}>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={`/dashboard/${segments
-                        .slice(0, index + 1)
-                        .join("/")}`}
-                    >
-                      {index === 0
-                        ? segment.charAt(0).toUpperCase() + segment.slice(1)
-                        : segment}
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                {index < segments.length - 1 && (
-                  <BreadcrumbSeparator key={`separator-${index}`} />
-                )}
-              </Fragment>
-            ))}
-          </BreadcrumbList>
-        </Breadcrumb>
+      <div className="w-full justify-between py-2 flex items-center px-4 h-9">
+        <div className="flex space-x-4 items-center">
+          <Toggle />
+          <Breadcrumb>
+            <BreadcrumbList>
+              {segments.map((segment, index, segments) => (
+                <Fragment key={index}>
+                  <BreadcrumbItem key={index}>
+                    <BreadcrumbLink asChild>
+                      <Link
+                        href={`/dashboard/${segments
+                          .slice(0, index + 1)
+                          .join("/")}`}
+                      >
+                        {index === 0
+                          ? segment.charAt(0).toUpperCase() + segment.slice(1)
+                          : segment}
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  {index < segments.length - 1 && (
+                    <BreadcrumbSeparator key={`separator-${index}`} />
+                  )}
+                </Fragment>
+              ))}
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <RefreshCcw
+          onClick={handleRefreshPath}
+          className={cn(
+            `cursor-pointer h-full`,
+            loading && "opacity-50 cursor-default animate-spin"
+          )}
+        />
       </div>
     </nav>
   );
