@@ -29,7 +29,7 @@ const ContainerListItem = ({ container }: ContainerListItemProps) => {
         <div className="flex-grow space-y-1">
           <p className="font-medium">{container.name}</p>
           <p className="text-sm text-gray-500">
-            <span>
+            <span suppressHydrationWarning>
               Created time: {new Date(container.created_at).toLocaleString()} |{" "}
               Terminated time:{" "}
               {new Date(container.terminated_time).toLocaleString()} |{" "}
