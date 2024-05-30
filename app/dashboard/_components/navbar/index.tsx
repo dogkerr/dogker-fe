@@ -110,13 +110,15 @@ const Navbar = ({ user }: NavbarProps) => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <RefreshCcw
-          onClick={handleRefreshPath}
-          className={cn(
-            `cursor-pointer h-full`,
-            loading && "opacity-50 cursor-default animate-spin"
-          )}
-        />
+        <div className="cursor-pointer h-full" title="Refresh page">
+          <RefreshCcw
+            onClick={handleRefreshPath}
+            className={cn(
+              `cursor-pointer h-full`,
+              loading && "opacity-50 cursor-default animate-spin"
+            )}
+          />
+        </div>
       </div>
     </nav>
   );

@@ -1,25 +1,40 @@
-import { ChevronDown, CreditCard } from "lucide-react";
-import BillingDetail from "./_components/billing-detail";
+import { CreditCard } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-const Billing = () => {
+const Billing = async () => {
   return (
     <div>
       <div className="flex items-center space-x-4">
         <CreditCard className="w-10 h-10 stroke-primary" />
         <span className="font-bold text-xl">Billing</span>
       </div>
-      <div className="mt-8 text-sm">
-        <div className="grid py-2 grid-cols-3 border-b border-[#24292E]/15">
-          <span className="font-bold ml-8">Container Name</span>
-          <span className="font-bold">Specifications</span>
-          <span className="font-bold">Cost</span>
-        </div>
-        {Array(5)
-          .fill(0)
-          .map((_, index) => (
-            <BillingDetail key={index} />
-          ))}
-      </div>
+      <Table className="mt-8 text-sm">
+        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Invoice</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Method</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">INV001</TableCell>
+            <TableCell>Paid</TableCell>
+            <TableCell>Credit Card</TableCell>
+            <TableCell className="text-right">$250.00</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   );
 };
