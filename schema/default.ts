@@ -42,3 +42,7 @@ export const scheduleSmallContainerRequestDefault = {
   scheduled_time: 0,
   time_format: "" as "SECOND",
 };
+
+export const initDepositDefault = {
+  amount: 0,
+};

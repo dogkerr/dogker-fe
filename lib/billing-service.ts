@@ -21,7 +21,7 @@ export const getDeposit = async (accessToken: string, depositId: string) => {
 
 export const initDeposit = async (accessToken: string, amount: number) => {
   try {
-    const res = await fetch(`${apiUrl}/api/v1/deposits/init`, {
+    const res = await fetch(`${apiUrl}/api/v1/deposits/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

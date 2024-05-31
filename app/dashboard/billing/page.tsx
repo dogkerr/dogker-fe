@@ -3,6 +3,7 @@ import { DataTable } from "./_components/data-table";
 import { Mutation, columns } from "./_components/data-table/columns";
 import { auth } from "@/app/auth";
 import { getMutations } from "@/lib/billing-service";
+import ActionButtons from "./_components/action-buttons";
 
 const Billing = async () => {
   const session = await auth();
@@ -27,9 +28,14 @@ const Billing = async () => {
 
   return (
     <div>
-      <div className="flex items-center space-x-4 mb-8">
-        <CreditCard className="w-10 h-10 stroke-primary" />
-        <span className="font-bold text-xl">Billing</span>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-4">
+          <CreditCard className="w-10 h-10 stroke-primary" />
+          <span className="font-bold text-xl">Billing</span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <ActionButtons session={session} />
+        </div>
       </div>
       <DataTable columns={columns} data={data} />
     </div>

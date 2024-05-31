@@ -38,3 +38,7 @@ export const scheduleSmallContainerRequestSchema = z.object({
     .min(0, "Scheduled time must be a non-negative number"),
   time_format: z.enum(["SECOND", "MINUTE", "HOUR", "DAY"]),
 });
+
+export const initDepositSchema = z.object({
+  amount: z.coerce.number().gt(0, "U deposit negative money?"),
+});
