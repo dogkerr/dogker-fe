@@ -3,6 +3,7 @@ import { getMonitor } from "@/lib/monitor-service";
 import { modifyLinks } from "@/lib/utils";
 import { Home } from "lucide-react";
 
+// TODO: Hubungin ke nginx
 const Dashboard = async () => {
   const session = await auth();
   if (!session) {

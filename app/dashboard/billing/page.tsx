@@ -1,40 +1,37 @@
 import { CreditCard } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable } from "./_components/data-table";
+import { Mutation, columns } from "./_components/data-table/columns";
+import { auth } from "@/app/auth";
+import { getMutations } from "@/lib/billing-service";
 
 const Billing = async () => {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const mutations = await getMutations(session.accessToken);
+  if ("error" in mutations) {
+    throw new Error(mutations.error);
+  }
+
+  const data: Mutation[] = mutations.map((mutation) => ({
+    id: mutation.ID,
+    mutation:
+      mutation.Type === "deposit" ? mutation.Mutation : -1 * mutation.Mutation,
+    currentBalance: mutation.Balance,
+    createdAt: new Date(mutation.CreatedAt).toLocaleString(),
+    chargeId: mutation.ChargeID,
+    depositId: mutation.DepositID,
+  }));
+
   return (
     <div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 mb-8">
         <CreditCard className="w-10 h-10 stroke-primary" />
         <span className="font-bold text-xl">Billing</span>
       </div>
-      <Table className="mt-8 text-sm">
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <DataTable columns={columns} data={data} />
     </div>
   );
 };
