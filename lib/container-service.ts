@@ -1,3 +1,5 @@
+import { convertToFormData } from "./utils";
+
 const apiUrl = process.env.NEXT_PUBLIC_CONTAINER_API_URL;
 
 export const createContainer = async (
@@ -17,6 +19,38 @@ export const createContainer = async (
 
     if (!res.ok) {
       throw new Error("Failed to create container: " + data.message);
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as any).message, ok: false };
+  }
+};
+
+export const createContainerFromFile = async (
+  values: CreateContainerFromFileRequest,
+  accessToken: string
+) => {
+  try {
+    const newValues = {
+      ...values,
+      imageName: values.name,
+    };
+
+    const formData = convertToFormData(newValues);
+
+    const res = await fetch(`${apiUrl}/api/v1/containers/upload`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error("Failed to create container from file: " + data.message);
     }
 
     return data;

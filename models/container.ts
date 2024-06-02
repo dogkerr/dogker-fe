@@ -29,6 +29,16 @@ type CreateContainerRequest = {
   endpoint: Endpoint[];
 };
 
+type CreateContainerFromFileRequest = {
+  name: string;
+  image: File[];
+  limit: Limit;
+  replica: number;
+  env?: string[];
+  volumes?: string[];
+  endpoint: Endpoint[];
+};
+
 type ScheduleCreateContainerRequest = {
   action: string;
   scheduled_time: number;

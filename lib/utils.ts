@@ -33,3 +33,27 @@ export const formatToRp = (number: number): string => {
 
   return formatter.format(number);
 };
+
+export function convertToFormData(data: Record<string, any>) {
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((val) => {
+        if (Object.prototype.toString.call(val) === "[object Object]") {
+          formData.append(`${key}`, JSON.stringify(val));
+        } else {
+          formData.append(`${key}`, val);
+        }
+      });
+    } else {
+      if (Object.prototype.toString.call(value) === "[object Object]") {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value);
+      }
+    }
+  });
+
+  return formData;
+}
