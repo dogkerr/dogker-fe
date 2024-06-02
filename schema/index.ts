@@ -100,82 +100,92 @@ export const addContainerSchema = z
     return val;
   });
 
-export const uploadContainerSchema = z.object({
-  name: z.string().min(1, "Container name is required"),
-  image: fileSchema,
-  limit: z.object({
-    cpus: z.coerce.number().min(0, "CPUs must be a non-negative number"),
-    memory: z.coerce.number().min(0, "Memory must be a non-negative number"),
-  }),
-  env: z
-    .string()
-    .optional()
-    .refine((val) => {
-      if (!val || val === "") {
-        return true;
-      }
+export const uploadContainerSchema = z
+  .object({
+    name: z.string().min(1, "Container name is required"),
+    image: fileSchema,
+    limit: z.object({
+      cpus: z.coerce.number().min(0, "CPUs must be a non-negative number"),
+      memory: z.coerce.number().min(0, "Memory must be a non-negative number"),
+    }),
+    env: z
+      .string()
+      .optional()
+      .refine((val) => {
+        if (!val || val === "") {
+          return true;
+        }
 
-      try {
+        try {
+          const envs = val.split(",");
+          for (const env of envs) {
+            if (!env.includes("=") || env.includes(" ")) {
+              return false;
+            }
+          }
+          return true;
+        } catch {
+          return false;
+        }
+      }, "Invalid environment variables")
+      .transform((val) => {
+        if (!val || val === "") {
+          return undefined;
+        }
         const envs = val.split(",");
-        for (const env of envs) {
-          if (!env.includes("=") || env.includes(" ")) {
-            return false;
-          }
+
+        return envs;
+      }),
+    volumes: z
+      .string()
+      .optional()
+      .refine((val) => {
+        if (!val || val === "") {
+          return true;
         }
-        return true;
-      } catch {
-        return false;
-      }
-    }, "Invalid environment variables")
-    .transform((val) => {
-      if (!val || val === "") {
-        return undefined;
-      }
-      const envs = val.split(",");
 
-      return envs;
-    }),
-  volumes: z
-    .string()
-    .optional()
-    .refine((val) => {
-      if (!val || val === "") {
-        return true;
-      }
-
-      try {
+        try {
+          const volumes = val.split(",");
+          for (const volume of volumes) {
+            if (!volume.includes("/") || volume.includes(" ")) {
+              return false;
+            }
+          }
+          return true;
+        } catch {
+          return false;
+        }
+      }, "Invalid volumes")
+      .transform((val) => {
+        if (!val || val === "") {
+          return undefined;
+        }
         const volumes = val.split(",");
-        for (const volume of volumes) {
-          if (!volume.includes("/") || volume.includes(" ")) {
-            return false;
-          }
-        }
-        return true;
-      } catch {
-        return false;
-      }
-    }, "Invalid volumes")
-    .transform((val) => {
-      if (!val || val === "") {
-        return undefined;
-      }
-      const volumes = val.split(",");
 
-      return volumes;
-    }),
-  replica: z.coerce.number().min(1, "There must be at least one replica"),
-  endpoint: z.array(
-    z.object({
-      target_port: z.coerce
-        .number()
-        .min(0, "Target port must be a non-negative number"),
-      published_port: z.coerce
-        .number()
-        .min(0, "Published port must be a non-negative number"),
-      protocol: z.enum(["tcp", "udp"]).default("tcp"), // Assuming "tcp" and "udp" are the valid protocols
-    })
-  ),
-});
+        return volumes;
+      }),
+    replica: z.coerce.number().min(1, "There must be at least one replica"),
+    endpoint: z.array(
+      z.object({
+        target_port: z.coerce
+          .number()
+          .min(0, "Target port must be a non-negative number"),
+        published_port: z.coerce
+          .number()
+          .min(0, "Published port must be a non-negative number"),
+        protocol: z.enum(["tcp", "udp"]).default("tcp"), // Assuming "tcp" and "udp" are the valid protocols
+      })
+    ),
+  })
+  .transform((val) => {
+    if (!val.env) {
+      delete val.env;
+    }
+    if (!val.volumes) {
+      delete val.volumes;
+    }
+    return val;
+  });
 
 export const scheduleContainerRequestSchema = z.object({
   action: z.string(),

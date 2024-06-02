@@ -42,7 +42,6 @@ export const createContainerFromFile = async (
     const res = await fetch(`${apiUrl}/api/v1/containers/upload`, {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${accessToken}`,
       },
       body: formData,
