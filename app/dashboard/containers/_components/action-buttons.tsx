@@ -121,6 +121,16 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
                 type="number"
               />
               <FormInput
+                label="Enviroment Variables (Comma-separated, optional)"
+                name="env"
+                placeholder="ENV1=value1,ENV2=value2"
+              />
+              <FormInput
+                label="Volumes (Comma-separated, optional)"
+                name="volumes"
+                placeholder="/path/to/volume1,/path/to/volume2"
+              />
+              <FormInput
                 label="Replicas"
                 name="replica"
                 placeholder="Enter number of replicas"
@@ -212,6 +222,16 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
                 name="container.limit.memory"
                 placeholder="Enter memory in MB"
                 type="number"
+              />
+              <FormInput
+                label="Enviroment Variables (Comma-separated, optional)"
+                name="container.env"
+                placeholder="ENV1=value1,ENV2=value2"
+              />
+              <FormInput
+                label="Volumes (Comma-separated, optional)"
+                name="container.volumes"
+                placeholder="/path/to/volume1,/path/to/volume2"
               />
               <FormInput
                 label="Replicas"

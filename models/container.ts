@@ -24,6 +24,8 @@ type CreateContainerRequest = {
   image: string;
   limit: Limit;
   replica: number;
+  env?: string[];
+  volumes?: string[];
   endpoint: Endpoint[];
 };
 
@@ -84,10 +86,11 @@ type Container = {
   service_id: string;
   image: string;
   labels: Labels;
+  env?: string[];
+  volumes?: string[];
   replica: number;
   limit: Limit;
   reservation: Reservation;
-  env: null | Record<string, string>;
   endpoint: Endpoint[];
   replica_available: number;
 };

@@ -64,6 +64,8 @@ const ActionButtons = ({
       cpus: container.limit.cpus,
       memory: container.limit.memory,
     },
+    env: (container.env ? container.env.join(",") : "") as any,
+    volumes: (container.volumes ? container.volumes.join(",") : "") as any,
     replica: container.replica,
     endpoint: [
       {
@@ -235,6 +237,16 @@ const ActionButtons = ({
                 name="limit.memory"
                 placeholder="Enter memory in MB"
                 type="number"
+              />
+              <FormInput
+                label="Enviroment Variables (Comma-separated, optional)"
+                name="env"
+                placeholder="ENV1=value1,ENV2=value2"
+              />
+              <FormInput
+                label="Volumes (Comma-separated, optional)"
+                name="volumes"
+                placeholder="/path/to/volume1,/path/to/volume2"
               />
               <FormInput
                 label="Replicas"

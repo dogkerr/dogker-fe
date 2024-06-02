@@ -4,6 +4,7 @@ import { getContainer } from "@/lib/container-service";
 import { Box } from "lucide-react";
 import ActionButtons from "./_components/action-buttons";
 
+// TODO: Display envs dan volumes conditionally
 const ContainerDetail = async ({ params }: { params: { id: string } }) => {
   const session = await auth();
   if (!session) {
@@ -75,6 +76,28 @@ const ContainerDetail = async ({ params }: { params: { id: string } }) => {
               {data.container.limit.memory} MB
             </p>
           </div>
+          {data.container.env && (
+            <div className="space-y-2">
+              <h3 className="font-bold text-gray-900">Environment Variables</h3>
+              {data.container.env.map((ep, index) => (
+                <p key={index} className="text-sm text-gray-600">
+                  <span className="font-semibold">Key:</span> {ep.split("=")[0]}
+                  , <span className="font-semibold">Value:</span>{" "}
+                  {ep.split("=")[1]}
+                </p>
+              ))}
+            </div>
+          )}
+          {data.container.volumes && (
+            <div className="space-y-2">
+              <h3 className="font-bold text-gray-900">Volumes</h3>
+              {data.container.volumes.map((ep, index) => (
+                <p key={index} className="text-sm text-gray-600">
+                  {index + 1})<span className="font-semibold"> {ep}</span>
+                </p>
+              ))}
+            </div>
+          )}
           <div className="space-y-2">
             <h3 className="font-bold text-gray-900">Endpoints</h3>
             {data.container.endpoint.map((ep, index) => (

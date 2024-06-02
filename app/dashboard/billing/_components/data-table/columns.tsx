@@ -10,6 +10,7 @@ import Link from "next/link";
 export type Mutation = {
   id: string;
   mutation: number;
+  type: "deposit" | "charge";
   currentBalance: number;
   chargeId: string;
   depositId: string;
@@ -22,12 +23,20 @@ export const columns: ColumnDef<Mutation>[] = [
     header: "Billing ID",
   },
   {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => {
+      const type = row.getValue("type") as string;
+
+      return <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>;
+    },
+  },
+  {
     accessorKey: "mutation",
     header: "Mutation",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("mutation"));
-
-      const isCharge = amount < 0;
+      const isCharge = row.original.chargeId ? true : false;
 
       return (
         <span

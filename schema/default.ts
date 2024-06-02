@@ -5,6 +5,8 @@ export const addContainerDefault = {
     cpus: 0,
     memory: 0,
   },
+  env: "" as any,
+  volumes: "" as any,
   replica: 1,
   endpoint: [
     {
@@ -19,22 +21,7 @@ export const scheduleContainerRequestDefault = {
   action: "CREATE",
   scheduled_time: 0,
   time_format: "" as "SECOND",
-  container: {
-    name: "",
-    image: "",
-    limit: {
-      cpus: 0,
-      memory: 0,
-    },
-    replica: 1,
-    endpoint: [
-      {
-        target_port: 0,
-        published_port: 0,
-        protocol: "" as "tcp",
-      },
-    ],
-  },
+  container: addContainerDefault,
 };
 
 export const scheduleSmallContainerRequestDefault = {

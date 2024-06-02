@@ -18,6 +18,7 @@ const Billing = async () => {
 
   const data: Mutation[] = mutations.map((mutation) => ({
     id: mutation.ID,
+    type: mutation.Type,
     mutation:
       mutation.Type === "deposit" ? mutation.Mutation : -1 * mutation.Mutation,
     currentBalance: mutation.Balance,

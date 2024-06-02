@@ -40,7 +40,7 @@ const ChargeDetail = async ({ params }: { params: { id: string } }) => {
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-semibold">Total CPU Usage:</span>{" "}
-              {data.TotalCpuUsage} units
+              {data.TotalCpuUsage} Clock ticks
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-semibold">Total Memory Usage:</span>{" "}
@@ -50,11 +50,11 @@ const ChargeDetail = async ({ params }: { params: { id: string } }) => {
               <span className="font-semibold">
                 Total Network Ingress Usage:
               </span>{" "}
-              {data.TotalNetIngressUsage} units
+              {data.TotalNetIngressUsage} B
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-semibold">Total Network Egress Usage:</span>{" "}
-              {data.TotalNetEgressUsage} units
+              {data.TotalNetEgressUsage} B
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-semibold">Created At:</span>{" "}
