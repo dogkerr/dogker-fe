@@ -60,7 +60,7 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Deposit u cash plz</DialogTitle>
+            <DialogTitle>Deposit</DialogTitle>
             <DialogDescription>
               Once you fill in the form and submit, you will be given a link to
               complete your payment.
@@ -94,6 +94,28 @@ const ActionButtons = ({ session }: ActionButtonsProps) => {
               </Button>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant={"secondary"} size={"xs"}>
+            Billing rate information
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Billing rate</DialogTitle>
+            <DialogDescription>
+              The following metrics are used to calculate your billing rate.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="text-sm">
+            CPU Usage Cost: 0.0175 IDR/clock tick <br />
+            Memory Usage Cost: 0.08 IDR/MB <br />
+            Network Ingress Cost: 0.00175 IDR/B <br />
+            Network Egress Cost: 0.00175 IDR/B
+          </div>
         </DialogContent>
       </Dialog>
     </>
